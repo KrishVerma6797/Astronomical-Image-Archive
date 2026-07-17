@@ -1,12 +1,13 @@
+import os
 import pymysql
 
 def get_connection():
-    connection= pymysql.connect(
-        host='HOST',
-        user='USER',
-        password='PASSWORD',
-        database='astronomical_archive',
-        port=3306,
+    return pymysql.connect(
+        host=os.getenv("DB_HOST"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_NAME"),
+        port=int(os.getenv("DB_PORT")),
+        ssl={"ssl": {}},
         cursorclass=pymysql.cursors.DictCursor
     )
-    return connection
