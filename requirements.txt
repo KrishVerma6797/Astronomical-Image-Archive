@@ -1,7 +1,9 @@
+streamlit
 fastapi
 uvicorn
 pymysql
+requests
 python-multipart
-astropy
 pillow
 numpy
+astropy
