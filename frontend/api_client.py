@@ -1,6 +1,6 @@
 import requests
 
-BASE_URL="http://127.0.0.1:8000"
+BASE_URL = "https://astronomical-image-archive-1.onrender.com"
 
 def search_images(params):
     response=requests.get(f"{BASE_URL}/search",params=params)
