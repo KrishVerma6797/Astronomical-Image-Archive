@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+*.egg-info/
+
+# Node / React
+frontend-react/node_modules/
+frontend-react/dist/
+
+# Local storage / generated files - not part of source code
+storage/
+thumbnails/
+
+# Test data used for local testing - not part of the project
+test_data/
+test_fits_generator.py
+test_fits_generator_2.py
+
+# Stray accidental file
+uvicorn
+
+# Environment files (if added later)
+.env
