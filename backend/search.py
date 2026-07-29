@@ -1,4 +1,5 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, params
+from sqlalchemy import values
 from database.connections import get_connection
 from typing import Optional
 from datetime import date
@@ -25,6 +26,9 @@ def search_images(
 
     date_from: Optional[date] = None,
     date_to: Optional[date] = None,
+    exposure_time: Optional[float] = None,
+    ra: Optional[float] = None,
+    dec_coord: Optional[float] = None,
 
     image_format: Optional[str] = None
 ):
@@ -142,6 +146,18 @@ def search_images(
         if image_format:
             query += " AND i.image_format=%s"
             values.append(image_format)
+
+        if exposure_time is not None:
+            query += " AND i.exposure_time = %s"
+            values.append(exposure_time)
+
+        if ra is not None:
+            query += " AND i.ra = %s"
+            values.append(ra)
+
+        if dec_coord is not None:
+            query += " AND i.dec_coord = %s"
+            values.append(dec_coord)
 
         query += " ORDER BY i.observation_date DESC"
 
