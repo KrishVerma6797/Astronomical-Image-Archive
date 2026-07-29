@@ -17,6 +17,7 @@ function Search() {
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [expandedCard, setExpandedCard] = useState(null);
 
   const handleChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
@@ -152,18 +153,47 @@ function Search() {
                 <h3 className="font-display text-lg font-semibold text-starlight">
                   {image.object_name}
                 </h3>
+               
                 <div className="mt-2 space-y-1 font-mono text-xs text-slate-400">
-                  <p>DATE&nbsp;&nbsp;&nbsp;{image.observation_date}</p>
-                  <p>SCOPE&nbsp;&nbsp;{image.telescope_name}</p>
-                  <p>INSTR&nbsp;&nbsp;{image.instrument_name}</p>
-                  <p>FORMAT&nbsp;{image.image_format}</p>
-                </div>
-                <a
-                  href={getFileUrl(image.image_id)}
-                  className="inline-block mt-4 bg-nebula hover:bg-nebula-dim text-white text-sm font-semibold px-4 py-2 rounded-lg transition"
-                >
-                  Open FITS File
-                </a>
+  <p><strong>DATE:</strong> {image.observation_date}</p>
+  <p><strong>SCOPE:</strong> {image.telescope_name}</p>
+  <p><strong>INSTR:</strong> {image.instrument_name}</p>
+  <p><strong>FORMAT:</strong> {image.image_format}</p>
+
+  {expandedCard === image.image_id && (
+    <>
+      <p><strong>Observer:</strong> {image.observer_name || "N/A"}</p>
+<p><strong>Department:</strong> {image.department || "N/A"}</p>
+<p><strong>Filter:</strong> {image.filter_name || "N/A"}</p>
+<p><strong>Wavelength:</strong> {image.wavelength_nm ?? "N/A"}</p>
+<p><strong>Observatory:</strong> {image.observatory || "N/A"}</p>
+<p><strong>Location:</strong> {image.location || "N/A"}</p>
+<p><strong>Exposure:</strong> {image.exposure_time ?? "N/A"}</p>
+<p><strong>RA:</strong> {image.ra || "N/A"}</p>
+<p><strong>DEC:</strong> {image.dec_coord || "N/A"}</p>
+<p><strong>Size:</strong> {image.image_size_mb ?? "N/A"} MB</p>
+    </>
+  )}
+</div>
+<div className="mt-4 flex items-center justify-between">
+  <button
+    onClick={() =>
+      setExpandedCard(
+        expandedCard === image.image_id ? null : image.image_id
+      )
+    }
+    className="text-starlight hover:underline text-sm font-semibold"
+  >
+    {expandedCard === image.image_id ? "View Less ▲" : "View More ▼"}
+  </button>
+
+  <a
+    href={getFileUrl(image.image_id)}
+    className="bg-nebula hover:bg-nebula-dim text-white text-sm font-semibold px-4 py-2 rounded-lg transition"
+  >
+    Open FITS File
+  </a>
+</div>
               </div>
             ))}
           </div>
