@@ -4,20 +4,32 @@ import Navbar from "../components/Navbar";
 
 function Search() {
   const [filters, setFilters] = useState({
-    object_name: "",
-    telescope: "",
-    instrument: "",
-    observer: "",
-    filter: "",
-    date_from: "",
-    date_to: "",
-    image_format: "",
-  });
+  // Basic Filters
+  object_name: "",
+  telescope: "",
+  instrument: "",
+  observer: "",
+  filter: "",
+  image_format: "",
+  date_from: "",
+  date_to: "",
+
+  // Advanced Filters
+  observatory: "",
+  location: "",
+  exposure_time: "",
+  ra: "",
+  dec_coord: "",
+  wavelength_nm: "",
+  department: "",
+  instrument_type: "",
+});
 
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [expandedCard, setExpandedCard] = useState(null);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const handleChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
@@ -122,13 +134,118 @@ function Search() {
           </div>
         </div>
 
-        <button
+      <div className="mt-6 flex items-center justify-between">
+  <button
+    type="button"
+    onClick={() => setShowAdvanced(!showAdvanced)}
+    className="text-starlight font-semibold hover:underline"
+  >
+    {showAdvanced
+      ? "Hide Advanced Filters ▲"
+      : "Show Advanced Filters ▼"}
+  </button>
+
+  <button
+    onClick={handleSearch}
+    disabled={loading}
+    className="bg-starlight hover:bg-starlight-dim text-space-950 font-semibold px-8 py-3 rounded-lg transition disabled:opacity-50"
+  >
+    {loading ? "Searching..." : "Search Images"}
+  </button>
+</div>
+
+        {/* <button
+  type="button"
+  onClick={() => setShowAdvanced(!showAdvanced)}
+  className="mt-5 text-starlight font-semibold hover:underline"
+>
+  {showAdvanced ? "Hide Advanced Filters ▲" : "Show Advanced Filters ▼"}
+</button> */}
+        {showAdvanced && (
+
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-5">
+
+  <input
+    name="observatory"
+    value={filters.observatory}
+    onChange={handleChange}
+    placeholder="Observatory"
+    className={inputClass}
+  />
+
+  <input
+    name="location"
+    value={filters.location}
+    onChange={handleChange}
+    placeholder="Location"
+    className={inputClass}
+  />
+
+  <input
+    type="number"
+    name="exposure_time"
+    value={filters.exposure_time}
+    onChange={handleChange}
+    placeholder="Exposure Time (sec)"
+    className={inputClass}
+  />
+
+  <input
+    type="number"
+    step="0.000001"
+    name="ra"
+    value={filters.ra}
+    onChange={handleChange}
+    placeholder="Right Ascension (RA)"
+    className={inputClass}
+  />
+
+  <input
+    type="number"
+    step="0.000001"
+    name="dec_coord"
+    value={filters.dec_coord}
+    onChange={handleChange}
+    placeholder="Declination (DEC)"
+    className={inputClass}
+  />
+
+  <input
+    type="number"
+    name="wavelength_nm"
+    value={filters.wavelength_nm}
+    onChange={handleChange}
+    placeholder="Wavelength (nm)"
+    className={inputClass}
+  />
+
+  <input
+    name="department"
+    value={filters.department}
+    onChange={handleChange}
+    placeholder="Observer Department"
+    className={inputClass}
+  />
+
+  <input
+    name="instrument_type"
+    value={filters.instrument_type}
+    onChange={handleChange}
+    placeholder="Instrument Type"
+    className={inputClass}
+  />
+
+</div>
+
+)}
+
+        {/* <button
           onClick={handleSearch}
           disabled={loading}
           className="mt-6 bg-starlight hover:bg-starlight-dim text-space-950 font-semibold px-6 py-3 rounded-lg transition disabled:opacity-50"
         >
           {loading ? "Searching..." : "Search Images"}
-        </button>
+        </button> */}
 
         {error && <p className="mt-4 text-red-400 font-body">{error}</p>}
 
@@ -153,7 +270,13 @@ function Search() {
                 <h3 className="font-display text-lg font-semibold text-starlight">
                   {image.object_name}
                 </h3>
-               
+                {/* <div className="mt-2 space-y-1 font-mono text-xs text-slate-400">
+                  <p>DATE&nbsp;&nbsp;&nbsp;{image.observation_date}</p>
+                  <p>SCOPE&nbsp;&nbsp;{image.telescope_name}</p>
+                  <p>INSTR&nbsp;&nbsp;{image.instrument_name}</p>
+                  <p>FORMAT&nbsp;{image.image_format}</p>
+                  <p>OBJECT_NAME&nbsp;{image.object_name}</p>
+                </div> */}
                 <div className="mt-2 space-y-1 font-mono text-xs text-slate-400">
   <p><strong>DATE:</strong> {image.observation_date}</p>
   <p><strong>SCOPE:</strong> {image.telescope_name}</p>
