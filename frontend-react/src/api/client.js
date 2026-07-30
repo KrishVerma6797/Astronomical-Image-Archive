@@ -1,5 +1,4 @@
-const BASE_URL = "http://127.0.0.1:8000";
-
+const BASE_URL = "http://16.16.179.246";
 export async function searchImages(params) {
   const query = new URLSearchParams(
     Object.entries(params).filter(([_, v]) => v)

@@ -1,5 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+load_dotenv()
+
 from backend.search import router as search_router
 from backend.upload import router as upload_router
 from backend.image_service import router as image_router
