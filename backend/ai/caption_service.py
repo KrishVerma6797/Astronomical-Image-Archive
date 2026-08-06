@@ -5,21 +5,27 @@ from dotenv import load_dotenv
 
 load_dotenv()
 client=genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
-PROMPT="""
-You are an astronomy expert.
+PROMPT = """
+You are an expert astronomer working at an astronomical observatory.
 
-Analyze this astronomical image.
+Analyze this astronomical image and generate a concise scientific caption.
 
-Describe:
+Rules:
+- Do NOT use numbered lists.
+- Do NOT use bullet points.
+- Write in one or two well-structured paragraphs.
+- Use professional scientific language.
+- Mention the probable astronomical object.
+- Describe any visible structures.
+- Mention any important observational characteristics.
+- If uncertain, use phrases like "appears to" or "likely".
+- Keep the response under 80 words.
 
-1. Object type
-2. Visible structures
-3. Scientific observations
+Example:
 
-Maximum 60 words.
+This image appears to show a spiral galaxy with a bright central bulge and faint, well-defined spiral arms extending outward. The object is isolated against a dark background, suggesting a deep-space observation. The compact and symmetric morphology indicates a distant galaxy observed under good imaging conditions.
 
-Do not hallucinate.
-If uncertain, say "appears to".
+Only return the caption.
 """
 
 def generate_caption(image_path):
