@@ -30,11 +30,47 @@ function Search() {
   const [error, setError] = useState(null);
   const [expandedCard, setExpandedCard] = useState(null);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [aiQuery, setAiQuery] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
+ 
+
+
 
   const handleChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
 
+  const handleAISearch = async () => {
+  setAiLoading(true);
+  setError(null);
+
+  try {
+    const response = await fetch("http://127.0.0.1:8000/ai-search", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: aiQuery,
+      }),
+    });
+
+    const data = await response.json();
+    console.log(data);
+    
+    if (data.status === "success" && data.results) {
+        setResults(data.results);
+    } else {
+        setError("No images found.");
+    }
+
+  } catch (err) {
+    setError("AI Search Failed");
+  } finally {
+    setAiLoading(false);
+  }
+};
+  
   const handleSearch = async () => {
     setLoading(true);
     setError(null);
@@ -52,6 +88,9 @@ function Search() {
     "bg-space-900 border border-space-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-starlight transition placeholder:text-slate-500";
 
   return (
+
+    
+
     <div className="min-h-screen bg-space-950 text-white">
       <Navbar />
 
@@ -62,6 +101,71 @@ function Search() {
         <p className="text-slate-400 text-sm mb-8 font-body">
           Filter by any combination of parameters below.
         </p>
+
+        <div className="mb-8 bg-space-900 border border-space-700 rounded-xl p-6">
+  <div className="flex items-center justify-between mb-4">
+    <div>
+      <h2 className="font-display text-2xl text-starlight font-semibold">
+        🤖 AI Search
+      </h2>
+      <p className="text-slate-400 text-sm mt-1">
+        Search images using natural language.
+      </p>
+    </div>
+
+    <span className="px-3 py-1 rounded-full bg-nebula text-xs font-semibold text-white">
+      AI
+    </span>
+  </div>
+
+  <div className="flex gap-3">
+    <input
+      type="text"
+      placeholder="Example: Show all FITS images of Andromeda captured after 2022"
+      value={aiQuery}
+      onChange={(e) => setAiQuery(e.target.value)}
+      className={`flex-1 ${inputClass}`}
+    />
+
+    <button
+      onClick={handleAISearch}
+      disabled={aiLoading}
+      className="bg-starlight hover:bg-starlight-dim text-space-950 font-semibold px-6 rounded-lg transition disabled:opacity-50"
+    >
+      {aiLoading ? "Searching..." : "AI Search"}
+    </button>
+  </div>
+
+  <div className="mt-4 flex flex-wrap gap-2">
+    <button
+      onClick={() => setAiQuery("Show all FITS images")}
+      className="px-3 py-1 rounded-full bg-space-800 hover:bg-space-700 text-xs"
+    >
+      FITS Images
+    </button>
+
+    <button
+      onClick={() => setAiQuery("Show Hubble images")}
+      className="px-3 py-1 rounded-full bg-space-800 hover:bg-space-700 text-xs"
+    >
+      Hubble
+    </button>
+
+    <button
+      onClick={() => setAiQuery("Show images after 2022")}
+      className="px-3 py-1 rounded-full bg-space-800 hover:bg-space-700 text-xs"
+    >
+      After 2022
+    </button>
+
+    <button
+      onClick={() => setAiQuery("Show PNG images")}
+      className="px-3 py-1 rounded-full bg-space-800 hover:bg-space-700 text-xs"
+    >
+      PNG
+    </button>
+  </div>
+</div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl">
           <input
@@ -145,22 +249,17 @@ function Search() {
       : "Show Advanced Filters ▼"}
   </button>
 
+  <div className="mt-8 flex justify-center">
   <button
     onClick={handleSearch}
     disabled={loading}
-    className="bg-starlight hover:bg-starlight-dim text-space-950 font-semibold px-8 py-3 rounded-lg transition disabled:opacity-50"
+    className="bg-starlight hover:bg-starlight-dim text-space-950 font-semibold px-10 py-3 rounded-lg transition disabled:opacity-50"
   >
     {loading ? "Searching..." : "Search Images"}
   </button>
 </div>
+</div>
 
-        {/* <button
-  type="button"
-  onClick={() => setShowAdvanced(!showAdvanced)}
-  className="mt-5 text-starlight font-semibold hover:underline"
->
-  {showAdvanced ? "Hide Advanced Filters ▲" : "Show Advanced Filters ▼"}
-</button> */}
         {showAdvanced && (
 
 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-5">
@@ -254,6 +353,8 @@ function Search() {
             {results.total_results} images found
           </p>
         )}
+
+        
 
         {results && (
           <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
