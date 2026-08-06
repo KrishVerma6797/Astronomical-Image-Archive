@@ -32,6 +32,8 @@ function Search() {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [aiQuery, setAiQuery] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
+  const [captions, setCaptions] = useState({});
+  const [captionLoading, setCaptionLoading] = useState({});
  
 
 
@@ -69,6 +71,50 @@ function Search() {
   } finally {
     setAiLoading(false);
   }
+};
+
+const generateCaption = async (imageId) => {
+
+  setCaptionLoading((prev)=>({
+    ...prev,
+    [imageId]:true
+  }));
+
+  try{
+
+    const response = await fetch(
+      `http://127.0.0.1:8000/caption/${imageId}`
+    );
+
+    const data = await response.json();
+
+    setCaptions((prev)=>({
+      ...prev,
+      [imageId]:data.caption
+    }));
+
+  }
+
+  catch(err){
+
+    setCaptions((prev)=>({
+      ...prev,
+      [imageId]:"Caption generation failed."
+    }));
+
+  }
+
+  finally{
+
+    setCaptionLoading((prev)=>({
+
+      ...prev,
+      [imageId]:false
+
+    }));
+
+  }
+
 };
   
   const handleSearch = async () => {
@@ -399,7 +445,7 @@ function Search() {
     </>
   )}
 </div>
-<div className="mt-4 flex items-center justify-between">
+{/* <div className="mt-4 flex items-center justify-between">
   <button
     onClick={() =>
       setExpandedCard(
@@ -417,7 +463,116 @@ function Search() {
   >
     Open FITS File
   </a>
+</div> */}
+
+<div className="mt-4 flex flex-wrap gap-3">
+
+<button
+
+onClick={()=>generateCaption(image.image_id)}
+
+className="bg-starlight hover:bg-starlight-dim text-space-950 px-4 py-2 rounded-lg text-sm font-semibold"
+
+>
+
+{
+
+captionLoading[image.image_id]
+
+?
+
+"Generating..."
+
+:
+
+"✨ AI Caption"
+
+}
+
+</button>
+
+<button
+
+onClick={()=>
+
+setExpandedCard(
+
+expandedCard===image.image_id
+
+?
+
+null
+
+:
+
+image.image_id
+
+)
+
+}
+
+className="text-starlight hover:underline text-sm font-semibold"
+
+>
+
+{
+
+expandedCard===image.image_id
+
+?
+
+"View Less ▲"
+
+:
+
+"View More ▼"
+
+}
+
+</button>
+
+<a
+
+href={getFileUrl(image.image_id)}
+
+className="bg-nebula hover:bg-nebula-dim text-white text-sm font-semibold px-4 py-2 rounded-lg transition"
+
+>
+
+Open FITS
+
+</a>
+
 </div>
+
+{
+
+captions[image.image_id] && (
+
+<div className="mt-4 bg-space-800 border border-space-700 rounded-lg p-4">
+
+<h4 className="font-semibold text-starlight mb-2">
+
+🤖 AI Analysis
+
+</h4>
+
+<p className="text-slate-300 text-sm leading-relaxed">
+
+{
+
+captions[image.image_id]
+
+}
+
+</p>
+
+</div>
+
+)
+
+}
+{/* ************************************************************************************** */}
               </div>
             ))}
           </div>
