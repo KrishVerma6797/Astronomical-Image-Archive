@@ -1,13 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from dotenv import load_dotenv
-load_dotenv()
-
 from backend.search import router as search_router
 from backend.upload import router as upload_router
 from backend.image_service import router as image_router
-
-
+from backend.routers.ai_search import router as ai_router
+from backend.routers.caption import router as caption_router
 
 app=FastAPI(
     title="ARIES Astronomical Image Archive",
@@ -26,7 +23,8 @@ app.add_middleware(
 app.include_router(search_router)
 app.include_router(upload_router)
 app.include_router(image_router)
-
+app.include_router(ai_router)
+app.include_router(caption_router)
 
 @app.get("/")
 def home():
