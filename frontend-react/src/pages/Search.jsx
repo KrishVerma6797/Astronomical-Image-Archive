@@ -47,7 +47,7 @@ function Search() {
   setError(null);
 
   try {
-    const response = await fetch("http://127.0.0.1:8000/ai-search", {
+    const response = await fetch("http://16.16.179.246/ai-search", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -82,9 +82,9 @@ const generateCaption = async (imageId) => {
 
   try{
 
-    const response = await fetch(
-      `http://127.0.0.1:8000/caption/${imageId}`
-    );
+   const response = await fetch(
+  `http://16.16.179.246/caption/${imageId}`
+);
 
     const data = await response.json();
 

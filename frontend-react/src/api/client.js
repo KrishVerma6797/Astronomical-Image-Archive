@@ -1,4 +1,4 @@
-const BASE_URL = "http://16.16.179.246";
+const BASE_URL = "https://aries-archive.duckdns.org";
 export async function searchImages(params) {
   const query = new URLSearchParams(
     Object.entries(params).filter(([_, v]) => v)
